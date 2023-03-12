@@ -1,4 +1,19 @@
-cmake_minimum_required(VERSION 3.7.2)
+cmake_minimum_required(VERSION 3.5.1)
 
-project(coLinux)
+include(settings.cmake)
 
+project(coLinux
+    LANGUAGES C CXX ASM
+    VERSION 0.8.0
+)
+
+file(GLOB
+    deps
+        src/t.c
+)
+
+add_library(
+    tmp
+        OBJECT
+        ${deps}
+)
