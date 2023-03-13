@@ -4,10 +4,13 @@ include(settings.cmake)
 
 project(coLinux
     LANGUAGES C CXX ASM
-    VERSION 0.8.0
+    VERSION ${CO_VERSION}
 )
 
-file(GLOB
+include(helpers/${COLINUX_HOST_OS}.cmake)
+
+file(
+    GLOB
     deps
         src/t.c
 )
