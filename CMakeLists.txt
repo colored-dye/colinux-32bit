@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.5.1)
 
+# Set paths, packages, and build settings
 include(settings.cmake)
 
 project(coLinux
@@ -7,6 +8,7 @@ project(coLinux
     VERSION ${CO_VERSION}
 )
 
+# HostOS-specific
 include(helpers/${COLINUX_HOST_OS}.cmake)
 
 file(

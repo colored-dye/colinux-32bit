@@ -1,5 +1,7 @@
 build/
 download/
+/mingw32/
+/log/
 *.o
 *.obj
 *.exe

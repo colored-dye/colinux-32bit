@@ -18,7 +18,7 @@ function(download_file URL ARCHIVE DOWNLOAD_TARGET SHA1 HTTPS)
         "${URL}/${ARCHIVE}"
         "${DOWNLOAD_TARGET}/${ARCHIVE}"
         SHOW_PROGRESS
-        # TLS_VERIFY ${HTTPS}
+        TLS_VERIFY ${HTTPS}
         STATUS status
         EXPECTED_HASH SHA1=${SHA1}
     )
@@ -32,5 +32,9 @@ endfunction()
 
 
 function(tar_unpack_to ARCHIVE TARGET_DIR)
-    file(ARCHIVE_EXTRACT)
+    message(STATUS "${CMAKE_CURRENT_FUNCTION}: ${ARCHIVE}")
+    file(MAKE_DIRECTORY "${TARGET_DIR}")
+    execute_process(
+        COMMAND tar xf "${ARCHIVE}" -C "${TARGET_DIR}"
+    )
 endfunction()

@@ -1,13 +1,11 @@
 set(COLINUX_HOST_OS "winnt" CACHE BOOL "" FORCE)
 
+# Cross-compile mingw32 toolchain
 set(CMAKE_TOOLCHAIN_FILE "helpers/Toolchain-mingw.cmake" CACHE BOOL "" FORCE)
 include(${CMAKE_TOOLCHAIN_FILE})
 
 include(helpers/common.cmake)
-download_file(${MINGW_URL} ${MINGW_ARCHIVE} ${DOWNLOADS} ${MINGW_ARCHIVE_SHA1} TRUE)
-download_file(${BINUTILS_URL} ${BINUTILS_ARCHIVE} ${DOWNLOADS} ${BINUTILS_ARCHIVE_SHA1} TRUE)
-download_file(${GCC_URL} ${GCC_ARCHIVE1} ${DOWNLOADS} ${GCC_ARCHIVE1_SHA1} TRUE)
-download_file(${GCC_URL} ${GCC_ARCHIVE2} ${DOWNLOADS} ${GCC_ARCHIVE2_SHA1} TRUE)
-download_file(${W32API_URL} ${W32API_ARCHIVE} ${DOWNLOADS} ${W32API_ARCHIVE_SHA1} TRUE)
-download_file(${FLTK_URL} ${FLTK_ARCHIVE} ${DOWNLOADS} ${FLTK_ARCHIVE_SHA1} TRUE)
-download_file(${WINPCAP_URL} ${WINPCAP_ARCHIVE} ${DOWNLOADS} ${WINPCAP_ARCHIVE_SHA1} TRUE)
+include(helpers/build-cross.cmake)
+
+# Build cross compile toolchain
+build_cross()
