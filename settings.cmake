@@ -97,6 +97,7 @@ string(
 )
 set(COLINUX_BUILD_LOG "${USER_TOPDIR}/log/build-colinux-${RAND_ID}.log" CACHE BOOL "" FORCE)
 set(COLINUX_BUILD_ERR "${USER_TOPDIR}/log/build-colinux-${RAND_ID}.err" CACHE BOOL "" FORCE)
+file(REMOVE_RECURSE "${USER_TOPDIR}/log")
 file(MAKE_DIRECTORY "${USER_TOPDIR}/log")
 execute_process(
     COMMAND touch "${COLINUX_BUILD_LOG}"
