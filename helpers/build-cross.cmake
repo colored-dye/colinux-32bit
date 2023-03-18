@@ -1,6 +1,7 @@
 include(helpers/common.cmake)
 
-set(BUILD_CROSS_FLAGS "CFLAGS=-O2 LDFLAGS=-s")
+set(BUILD_CROSS_CFLAGS "CFLAGS=-O2")
+set(BUILD_CROSS_LDFLAGS "LDFLAGS=-s")
 
 # Download needed packages
 # for building mingw32 toolchain and libraries
@@ -35,7 +36,7 @@ function(configure_binutils)
     file(REMOVE_RECURSE "${BUILD_DIR}/binutils-${TARGET}")
     file(MAKE_DIRECTORY "${BUILD_DIR}/binutils-${TARGET}")
     execute_process(
-        COMMAND "../${BINUTILS}/configure" "--prefix=${PREFIX}" "--target=${TARGET}" --disable-nls
+        COMMAND "../${BINUTILS}/configure" "--prefix=${PREFIX}" "--target=${TARGET}" "--build=${BUILD}" --disable-nls
         WORKING_DIRECTORY "${BUILD_DIR}/binutils-${TARGET}"
         OUTPUT_FILE "${COLINUX_BUILD_LOG}"
         ERROR_FILE "${COLINUX_BUILD_ERR}"
@@ -50,7 +51,7 @@ endfunction(configure_binutils)
 function(build_binutils)
     message(STATUS "Building binutils")
     execute_process(
-        COMMAND make "${BUILD_CROSS_FLAGS}"
+        COMMAND make "${BUILD_CROSS_CFLAGS}" "${BUILD_CROSS_LDFLAGS}"
         WORKING_DIRECTORY "${BUILD_DIR}/binutils-${TARGET}"
         OUTPUT_FILE "${COLINUX_BUILD_LOG}"
         ERROR_FILE "${COLINUX_BUILD_ERR}"
@@ -63,7 +64,7 @@ endfunction(build_binutils)
 
 
 function(install_binutils)
-    message(STATUS Installing binutils)
+    message(STATUS "Installing binutils")
     execute_process(
         COMMAND make install
         WORKING_DIRECTORY "${BUILD_DIR}/binutils-${TARGET}"
@@ -86,7 +87,9 @@ function(build_cross)
 
     # install_libs()
 
-    extract_binutils()
-    configure_binutils()
+    # extract_binutils()
+    # configure_binutils()
+    # build_binutils()
+    # install_binutils()
 
 endfunction(build_cross)
