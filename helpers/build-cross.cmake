@@ -7,13 +7,13 @@ set(CHECKING "--enable-checking=release")
 # Download needed packages
 # for building mingw32 toolchain and libraries
 function(download_cross_files)
-    download_file(${MINGW_URL} ${MINGW_ARCHIVE} ${DOWNLOADS} ${MINGW_ARCHIVE_SHA1} TRUE)
-    download_file(${BINUTILS_URL} ${BINUTILS_ARCHIVE} ${DOWNLOADS} ${BINUTILS_ARCHIVE_SHA1} TRUE)
-    download_file(${GCC_URL} ${GCC_ARCHIVE1} ${DOWNLOADS} ${GCC_ARCHIVE1_SHA1} TRUE)
-    download_file(${GCC_URL} ${GCC_ARCHIVE2} ${DOWNLOADS} ${GCC_ARCHIVE2_SHA1} TRUE)
-    download_file(${W32API_URL} ${W32API_ARCHIVE} ${DOWNLOADS} ${W32API_ARCHIVE_SHA1} TRUE)
-    download_file(${FLTK_URL} ${FLTK_ARCHIVE} ${DOWNLOADS} ${FLTK_ARCHIVE_SHA1} TRUE)
-    download_file(${WINPCAP_URL} ${WINPCAP_ARCHIVE} ${DOWNLOADS} ${WINPCAP_ARCHIVE_SHA1} TRUE)
+    download_file(${MINGW_URL} ${MINGW_ARCHIVE} ${DOWNLOADS} ${MINGW_ARCHIVE_SHA1})
+    download_file(${BINUTILS_URL} ${BINUTILS_ARCHIVE} ${DOWNLOADS} ${BINUTILS_ARCHIVE_SHA1})
+    download_file(${GCC_URL} ${GCC_ARCHIVE1} ${DOWNLOADS} ${GCC_ARCHIVE1_SHA1})
+    download_file(${GCC_URL} ${GCC_ARCHIVE2} ${DOWNLOADS} ${GCC_ARCHIVE2_SHA1})
+    download_file(${W32API_URL} ${W32API_ARCHIVE} ${DOWNLOADS} ${W32API_ARCHIVE_SHA1})
+    download_file(${FLTK_URL} ${FLTK_ARCHIVE} ${DOWNLOADS} ${FLTK_ARCHIVE_SHA1})
+    download_file(${WINPCAP_URL} ${WINPCAP_ARCHIVE} ${DOWNLOADS} ${WINPCAP_ARCHIVE_SHA1})
 endfunction(download_cross_files)
 
 

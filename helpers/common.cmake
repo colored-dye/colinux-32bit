@@ -1,6 +1,6 @@
 include(ExternalProject)
 # Download a file to the target location
-function(download_file URL ARCHIVE DOWNLOAD_TARGET SHA1 HTTPS)
+function(download_file URL ARCHIVE DOWNLOAD_TARGET SHA1)
     if(EXISTS ${DOWNLOAD_TARGET}/${ARCHIVE})
         file(SHA1
             ${DOWNLOAD_TARGET}/${ARCHIVE}
@@ -9,16 +9,15 @@ function(download_file URL ARCHIVE DOWNLOAD_TARGET SHA1 HTTPS)
         if(${sha1} STREQUAL ${SHA1})
             message(STATUS "File `${ARCHIVE}' completed")
             return()
-        else()
-            message(STATUS "File `${ARCHIVE}' not completed, download now")
         endif()
     endif()
 
+    message(STATUS "File `${ARCHIVE}' not completed, download now")
     file(DOWNLOAD
         "${URL}/${ARCHIVE}"
         "${DOWNLOAD_TARGET}/${ARCHIVE}"
         SHOW_PROGRESS
-        TLS_VERIFY ${HTTPS}
+        # TLS_VERIFY ${HTTPS}
         STATUS status
         EXPECTED_HASH SHA1=${SHA1}
     )
