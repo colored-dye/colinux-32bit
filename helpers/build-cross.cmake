@@ -1,8 +1,10 @@
 include(helpers/common.cmake)
 
-set(BUILD_CROSS_CFLAGS "CFLAGS=-O2")
-set(BUILD_CROSS_LDFLAGS "LDFLAGS=-s")
-set(CHECKING "--enable-checking=release")
+set(BUILD_CROSS_CFLAGS "CFLAGS=-O2" CACHE STRING "" FORCE)
+set(BUILD_CROSS_LDFLAGS "LDFLAGS=-s" CACHE STRING "" FORCE)
+set(CHECKING "--enable-checking=release" CACHE STRING "" FORCE)
+set(BINUTILS_CROSS_EXISTS OFF CACHE BOOL "" FORCE)
+set(GCC_CROSS_EXISTS OFF CACHE BOOL "" FORCE)
 
 # Download needed packages
 # for building mingw32 toolchain and libraries
@@ -24,6 +26,21 @@ function(install_libs)
     tar_unpack_to(${DOWNLOADS}/${W32API_ARCHIVE} ${PREFIX}/${TARGET})
 endfunction(install_libs)
 
+# Skip building if already installed
+function(check_binutils)
+    execute_process(
+        COMMAND "${TARGET}-ld -v"
+        OUTPUT_QUIET
+        ERROR_QUIET
+        RESULT_VARIABLE ret
+    )
+    if (${ret} EQUAL 0)
+        set(BINUTILS_CROSS_EXISTS ON CACHE BOOL "" FORCE)
+        message(STATUS "Cross binutils already installed")
+    else()
+        message(STATUS "Cross binutils not installed. Building now")
+    endif()
+endfunction(check_binutils)
 
 function(extract_binutils)
     message(STATUS "Extracting binutils")
@@ -46,7 +63,7 @@ function(configure_binutils)
     file(APPEND "${COLINUX_BUILD_LOG}" "${log}")
     file(APPEND "${COLINUX_BUILD_ERR}" "${err}")
     if(NOT ${ret} EQUAL 0)
-        message(FATAL_ERROR "Configure binutils failed")
+        message(FATAL_ERROR "Configure binutils failed: ${err}")
     endif()
 endfunction(configure_binutils)
 
@@ -54,7 +71,7 @@ endfunction(configure_binutils)
 function(build_binutils)
     message(STATUS "Building binutils")
     execute_process(
-        COMMAND make "${BUILD_CROSS_CFLAGS}" "${BUILD_CROSS_LDFLAGS}"
+        COMMAND make "${BUILD_CROSS_CFLAGS}" "${BUILD_CROSS_LDFLAGS}" "-j${CPU_THREADS}"
         WORKING_DIRECTORY "${BUILD_DIR}/binutils-${TARGET}"
         OUTPUT_VARIABLE log
         ERROR_VARIABLE err
@@ -63,7 +80,7 @@ function(build_binutils)
     file(APPEND "${COLINUX_BUILD_LOG}" "${log}")
     file(APPEND "${COLINUX_BUILD_ERR}" "${err}")
     if(NOT ${ret} EQUAL 0)
-        message(FATAL_ERROR "Build binutils failed")
+        message(FATAL_ERROR "Build binutils failed: ${err}")
     endif()
 endfunction(build_binutils)
 
@@ -80,9 +97,24 @@ function(install_binutils)
     file(APPEND "${COLINUX_BUILD_LOG}" "${log}")
     file(APPEND "${COLINUX_BUILD_ERR}" "${err}")
     if(NOT ${ret} EQUAL 0)
-        message(FATAL_ERROR "Install binutils failed")
+        message(FATAL_ERROR "Install binutils failed: ${err}")
     endif()
 endfunction(install_binutils)
+
+function(check_gcc)
+    execute_process(
+        COMMAND "${TARGET}-gcc -v"
+        OUTPUT_QUIET
+        ERROR_QUIET
+        RESULT_VARIABLE ret
+    )
+    if (${ret} EQUAL 0)
+        set(GCC_CROSS_EXISTS ON CACHE BOOL "" FORCE)
+        message(STATUS "Cross gcc already installed")
+    else()
+        message(STATUS "Cross gcc not installed. Building now")
+    endif()
+endfunction(check_gcc)
 
 function(extract_gcc)
     message(STATUS "Extracting gcc")
@@ -105,14 +137,14 @@ function(configure_gcc)
     file(APPEND "${COLINUX_BUILD_LOG}" "${log}")
     file(APPEND "${COLINUX_BUILD_ERR}" "${err}")
     if(NOT ${ret} EQUAL 0)
-        message(FATAL_ERROR "Configure gcc failed")
+        message(FATAL_ERROR "Configure gcc failed: ${err}")
     endif()
 endfunction(configure_gcc)
 
 function(build_gcc)
     message(STATUS "Building gcc")
     execute_process(
-        COMMAND make "${BUILD_CROSS_CFLAGS}" "${BUILD_CROSS_LDFLAGS}"
+        COMMAND make "${BUILD_CROSS_CFLAGS}" "${BUILD_CROSS_LDFLAGS}" "-j${CPU_THREADS}"
         WORKING_DIRECTORY "${BUILD_DIR}/gcc-${TARGET}"
         OUTPUT_VARIABLE log
         ERROR_VARIABLE err
@@ -121,7 +153,7 @@ function(build_gcc)
     file(APPEND "${COLINUX_BUILD_LOG}" "${log}")
     file(APPEND "${COLINUX_BUILD_ERR}" "${err}")
     if(NOT ${ret} EQUAL 0)
-        message(FATAL_ERROR "Building gcc failed")
+        message(FATAL_ERROR "Building gcc failed: ${err}")
     endif()
 endfunction(build_gcc)
 
@@ -136,30 +168,36 @@ function(install_gcc)
     file(APPEND "${COLINUX_BUILD_LOG}" "${log}")
     file(APPEND "${COLINUX_BUILD_ERR}" "${err}")
     if(NOT ${ret} EQUAL 0)
-        message(FATAL_ERROR "Installing gcc failed")
+        message(FATAL_ERROR "Installing gcc failed: ${err}")
     endif()
 endfunction(install_gcc)
 
 # Top level, called from winnt.cmake
 function(build_cross)
-    # download_cross_files()
+    download_cross_files()
     
     message(STATUS "log: ${COLINUX_BUILD_LOG}")
     message(STATUS "err: ${COLINUX_BUILD_ERR}")
 
     # Install mingw32 & w32api libs
-    # install_libs()
+    install_libs()
 
     # Install cross binutils
-    # extract_binutils()
-    # configure_binutils()
-    # build_binutils()
-    # install_binutils()
+    check_binutils()
+    if(NOT BINUTILS_CROSS_EXISTS)
+        extract_binutils()
+        configure_binutils()
+        build_binutils()
+        install_binutils()
+    endif()
 
     # Install cross gcc
-    # extract_gcc()
-    # configure_gcc()
-    # build_gcc()
-    # install_gcc()
+    check_gcc()
+    if(NOT GCC_CROSS_EXISTS)
+        extract_gcc()
+        configure_gcc()
+        build_gcc()
+        install_gcc()
+    endif()
 
 endfunction(build_cross)

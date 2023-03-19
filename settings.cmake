@@ -118,3 +118,7 @@ set(KERNEL_CHECKSUM "${MD5DIR}/.build-kernel.md5" CACHE STRING "" FORCE)
 # message(STATUS "CMAKE_PROGRAM_PATH: ${CMAKE_PROGRAM_PATH}")
 set(ENV{PATH} "$ENV{PATH}:${PREFIX}/bin")
 message(STATUS "PATH: $ENV{PATH}")
+
+include(ProcessorCount)
+ProcessorCount(CPU_THREADS)
+message("${CPU_THREADS}")

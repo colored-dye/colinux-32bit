@@ -22,13 +22,11 @@ function(download_file URL ARCHIVE DOWNLOAD_TARGET SHA1)
         EXPECTED_HASH SHA1=${SHA1}
     )
     list(GET status 0 ret)
-    message("${CMAKE_CURRENT_FUNCTION} return: ${ret}")
+    # message("${CMAKE_CURRENT_FUNCTION} return: ${ret}")
     if(NOT ${ret} EQUAL 0)
         message(FATAL_ERROR "Failed to download ${ARCHIVE}")
     endif()
 endfunction()
-
-
 
 function(tar_unpack_to ARCHIVE TARGET_DIR)
     message(STATUS "${CMAKE_CURRENT_FUNCTION}: ${ARCHIVE}")
