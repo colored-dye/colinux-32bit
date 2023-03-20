@@ -28,13 +28,7 @@ endfunction(install_libs)
 
 # Skip building if already installed
 function(check_binutils)
-    execute_process(
-        COMMAND "${TARGET}-ld -v"
-        OUTPUT_QUIET
-        ERROR_QUIET
-        RESULT_VARIABLE ret
-    )
-    if (${ret} EQUAL 0)
+    if (EXISTS "${PREFIX}/bin/${TARGET}-ld")
         set(BINUTILS_CROSS_EXISTS ON CACHE BOOL "" FORCE)
         message(STATUS "Cross binutils already installed")
     else()
@@ -102,13 +96,7 @@ function(install_binutils)
 endfunction(install_binutils)
 
 function(check_gcc)
-    execute_process(
-        COMMAND "${TARGET}-gcc -v"
-        OUTPUT_QUIET
-        ERROR_QUIET
-        RESULT_VARIABLE ret
-    )
-    if (${ret} EQUAL 0)
+    if (EXISTS "${PREFIX}/bin/${TARGET}-gcc")
         set(GCC_CROSS_EXISTS ON CACHE BOOL "" FORCE)
         message(STATUS "Cross gcc already installed")
     else()
@@ -161,6 +149,7 @@ function(install_gcc)
     message(STATUS "Installing gcc")
     execute_process(
         COMMAND make install
+        WORKING_DIRECTORY "${BUILD_DIR}/gcc-${TARGET}"
         OUTPUT_VARIABLE log
         ERROR_VARIABLE err
         RESULT_VARIABLE ret
