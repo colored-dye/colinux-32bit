@@ -11,14 +11,14 @@ project(coLinux
 # HostOS-specific
 include(helpers/${COLINUX_HOST_OS}.cmake)
 
-file(
-    GLOB
-    deps
-        src/t.c
-)
+# file(
+#     GLOB
+#     deps
+#         src/t.c
+# )
 
-add_library(
-    tmp
-        OBJECT
-        ${deps}
-)
+# add_library(
+#     tmp
+#         OBJECT
+#         ${deps}
+# )

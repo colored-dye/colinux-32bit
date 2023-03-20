@@ -9,6 +9,7 @@ set(GCC_CROSS_EXISTS OFF CACHE BOOL "" FORCE)
 # Download needed packages
 # for building mingw32 toolchain and libraries
 function(download_cross_files)
+    message(STATUS "Downloading cross toolchain packages")
     download_file(${MINGW_URL} ${MINGW_ARCHIVE} ${DOWNLOADS} ${MINGW_ARCHIVE_SHA1})
     download_file(${BINUTILS_URL} ${BINUTILS_ARCHIVE} ${DOWNLOADS} ${BINUTILS_ARCHIVE_SHA1})
     download_file(${GCC_URL} ${GCC_ARCHIVE1} ${DOWNLOADS} ${GCC_ARCHIVE1_SHA1})
@@ -163,6 +164,7 @@ endfunction(install_gcc)
 
 # Top level, called from winnt.cmake
 function(build_cross)
+    message(STATUS "Building cross toolchain")
     download_cross_files()
     
     message(STATUS "log: ${COLINUX_BUILD_LOG}")
