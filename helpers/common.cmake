@@ -29,7 +29,7 @@ function(download_file URL ARCHIVE DOWNLOAD_TARGET SHA1)
 endfunction()
 
 function(tar_unpack_to ARCHIVE TARGET_DIR)
-    message(STATUS "${CMAKE_CURRENT_FUNCTION}: ${ARCHIVE}")
+    message(STATUS "tar_unpack_to: ${ARCHIVE}")
     file(MAKE_DIRECTORY "${TARGET_DIR}")
     execute_process(
         COMMAND tar xf "${ARCHIVE}" -C "${TARGET_DIR}"
